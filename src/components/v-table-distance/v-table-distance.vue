@@ -59,6 +59,7 @@
                 distPerPage: 10,
                 pageNumber: 1,
                 SortingType: ""
+
             };
         },
         computed: {

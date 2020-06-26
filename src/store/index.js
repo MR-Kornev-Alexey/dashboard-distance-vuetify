@@ -6,6 +6,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    error: null,
     distances: [],
     number: 0,
     isSortingCity: false,
@@ -13,6 +14,9 @@ export default new Vuex.Store({
     isSortingDistance: false
   },
   mutations: {
+    SET_ERROR_FILTER(state,message){
+      state.error = message
+    },
     SET_DISTANCES_TO_STATE(state, payload) {
       state.distances = payload;
     },
@@ -54,6 +58,30 @@ export default new Vuex.Store({
         });
     },
 
+    FILTER_FROM_API({ commit }, searchData,typeData,compareData){
+      commit("SET_ERROR_FILTER", null)
+      const url = "http://localhost:3000/filterdist";
+      const data = {
+        searchData: searchData,
+        typeData: typeData,
+        compareData: compareData
+      };
+      if(searchData.typeData === 'city'&& (searchData.compareData === ">" || searchData.compareData === "<")){
+        commit("SET_ERROR_FILTER", "Для данной колонки работают только условие СОДЕРЖИТ или РАВНО")
+        return false
+      }
+
+      return axios
+          .post(url, data)
+          .then(response => {
+                commit("SET_DISTANCES_TO_STATE", response.data)
+          })
+              .catch(error => {
+                  console.log(error);
+                  return error;
+                });
+
+    },
     SORTING_FROM_API({ commit }, { pageNumber, distPerPage, SortingType }) {
       const url = "http://localhost:3000/sortingdist";
       const data = {
@@ -103,6 +131,7 @@ export default new Vuex.Store({
     NUMBER: state => state.number.counter,
     IS_SORTING_CITY: state => state.isSortingCity,
     IS_SORTING_NUMBER: state => state.isSortingNumber,
-    IS_SORTING_DISTANCE: state => state.isSortingDistance
+    IS_SORTING_DISTANCE: state => state.isSortingDistance,
+    GET_ERROR: state => state.error
   }
 });
