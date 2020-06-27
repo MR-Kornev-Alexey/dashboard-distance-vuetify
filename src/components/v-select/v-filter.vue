@@ -8,7 +8,7 @@
                     type="warning"
                     dark
             >
-                {{ error }}
+                {{ ERROR_MESSAGE }}
             </v-alert>
         </v-row>
         <v-row justify="center">
@@ -53,7 +53,7 @@
     export default {
         name: "v-filter",
         computed:{
-            ...mapGetters(['GET_ERROR']),
+            ...mapGetters(['GET_ERROR','ERROR_MESSAGE','PAGE_NUMBER']),
             error() {
                 return this.GET_ERROR;
             }
@@ -88,7 +88,12 @@
                 const searchData = this.search,
                     typeData = this.filterTypeDistance[this.selected[0]],
                     compareData = this.filterCompareDistance[this.selected[1]];
-                    this.FILTER_FROM_API({ searchData, typeData, compareData
+                    this.FILTER_FROM_API({
+                        searchData,
+                        typeData,
+                        compareData,
+                        pageNumber: this.PAGE_NUMBER,
+                        distPerPage: 10,
                 })
 
 

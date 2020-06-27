@@ -6,22 +6,33 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    pageNumber: 1,
     error: null,
+    error_message: "",
     distances: [],
     number: 0,
     isSortingCity: false,
     isSortingNumber: false,
-    isSortingDistance: false
+    isSortingDistance: false,
+    isFilteringCity: false
   },
   mutations: {
+    CLEAR_ERROR_FILTER(state){
+      state.error_message = ""
+      state.error = false
+    },
     SET_ERROR_FILTER(state,message){
-      state.error = message
+      state.error_message = message
+      state.error = true
     },
     SET_DISTANCES_TO_STATE(state, payload) {
-      state.distances = payload;
+      state.distances = payload
     },
     SET_NUMBER_DIST_TO_STATE(state, payload) {
       state.number = payload;
+    },
+    SET_IS_FILTERING_CITY_TO_STATE(state){
+      state.isFilteringCity = true;
     },
     SET_IS_SORTING_CITY_TO_STATE(state) {
       state.isSortingCity = true;
@@ -45,37 +56,29 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    GET_NUMBER_DIST_FROM_API({ commit }) {
-      const url = "http://localhost:3000/getnumberdist";
-      return axios
-        .get(url)
-        .then(resp => {
-          commit("SET_NUMBER_DIST_TO_STATE", resp.data);
-          return resp.data;
-        })
-        .catch(error => {
-          return error;
-        });
-    },
-
-    FILTER_FROM_API({ commit }, searchData,typeData,compareData){
-      commit("SET_ERROR_FILTER", null)
+    FILTER_FROM_API({ commit }, searchData,typeData,compareData,pageNumber, distPerPage){
+      commit("CLEAR_ERROR_FILTER")
       const url = "http://localhost:3000/filterdist";
       const data = {
         searchData: searchData,
         typeData: typeData,
-        compareData: compareData
+        compareData: compareData,
+        pageNumber: pageNumber,
+        distPerPage: distPerPage
       };
       if(searchData.typeData === 'city'&& (searchData.compareData === ">" || searchData.compareData === "<")){
-        commit("SET_ERROR_FILTER", "Для данной колонки работают только условие СОДЕРЖИТ или РАВНО")
+        commit("SET_ERROR_FILTER", "Для колонки НАЗВАНИЕ  работают только условие СОДЕРЖИТ или РАВНО")
         return false
       }
 
       return axios
           .post(url, data)
           .then(response => {
-                commit("SET_DISTANCES_TO_STATE", response.data)
-          })
+            commit("SET_DISTANCES_TO_STATE", response.data.distances);
+            commit("CLEAR_IS_SORTING_ALL_TO_STATE");
+            commit("SET_IS_FILTERING_CITY_TO_STATE");
+            commit("SET_NUMBER_DIST_TO_STATE", response.data.count);
+            })
               .catch(error => {
                   console.log(error);
                   return error;
@@ -116,8 +119,9 @@ export default new Vuex.Store({
       return axios
         .post(url, data)
         .then(response => {
-          commit("SET_DISTANCES_TO_STATE", response.data);
+          commit("SET_DISTANCES_TO_STATE", response.data.distances);
           commit("CLEAR_IS_SORTING_ALL_TO_STATE");
+          commit("SET_NUMBER_DIST_TO_STATE", response.data.count);
           return response;
         })
         .catch(error => {
@@ -127,11 +131,14 @@ export default new Vuex.Store({
     }
   },
   getters: {
+    PAGE_NUMBER:state => state.pageNumber,
+    ERROR_MESSAGE:state => state.error_message,
     DISTANCES: state => state.distances,
-    NUMBER: state => state.number.counter,
+    NUMBER: state => state.number,
     IS_SORTING_CITY: state => state.isSortingCity,
     IS_SORTING_NUMBER: state => state.isSortingNumber,
     IS_SORTING_DISTANCE: state => state.isSortingDistance,
+    IS_FILTERING_CITY: state => state.isFilteringCity,
     GET_ERROR: state => state.error
   }
 });

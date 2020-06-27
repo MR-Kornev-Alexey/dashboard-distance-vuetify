@@ -68,7 +68,8 @@
                 "NUMBER",
                 "IS_SORTING_CITY",
                 "IS_SORTING_NUMBER",
-                "IS_SORTING_DISTANCE"
+                "IS_SORTING_DISTANCE",
+                "IS_FILTERING_CITY"
             ]),
             pages() {
                 let num = Math.ceil(parseInt(this.NUMBER) / 10);
@@ -78,8 +79,8 @@
         methods: {
             ...mapActions([
                 "GET_DISTANCES_FROM_API",
-                "GET_NUMBER_DIST_FROM_API",
-                "SORTING_FROM_API"
+                "SORTING_FROM_API",
+
             ]),
             sortingByDistance() {
                 this.SORTING_FROM_API({
@@ -128,7 +129,9 @@
             },
             pageClick(page) {
                 this.pageNumber = page;
-                if (this.IS_SORTING_CITY === true) {
+                 if(this.IS_FILTERING_CITY === true){
+
+                 }else if (this.IS_SORTING_CITY === true) {
                     this.SORTING_FROM_API({
                         pageNumber: this.pageNumber,
                         distPerPage: 10,
@@ -184,16 +187,7 @@
             }
         },
         mounted() {
-            this.GET_NUMBER_DIST_FROM_API()
-                .then(resp => {
-                    if (resp.data) {
-                        return resp.data;
-                    }
-                })
-                .catch(error => {
-                    return error;
-                });
-            this.GET_DISTANCES_FROM_API({
+          this.GET_DISTANCES_FROM_API({
                 pageNumber: this.pageNumber,
                 distPerPage: 10
             })
