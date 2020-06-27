@@ -14,24 +14,32 @@ export default new Vuex.Store({
     isSortingCity: false,
     isSortingNumber: false,
     isSortingDistance: false,
-    isFilteringCity: false
+    isFilteringCity: false,
+    isSearchData: "",
+    isTypeData: "",
+    isCompareData: ""
   },
   mutations: {
-    CLEAR_ERROR_FILTER(state){
-      state.error_message = ""
-      state.error = false
+    SET_FILTER_DATA_TO_STORE(state, searchData, typeData, compareData) {
+      state.isSearchData = searchData.searchData;
+      state.isTypeData = searchData.typeData;
+      state.isCompareData = searchData.compareData;
     },
-    SET_ERROR_FILTER(state,message){
-      state.error_message = message
-      state.error = true
+    CLEAR_ERROR_FILTER(state) {
+      state.error_message = "";
+      state.error = false;
+    },
+    SET_ERROR_FILTER(state, message) {
+      state.error_message = message;
+      state.error = true;
     },
     SET_DISTANCES_TO_STATE(state, payload) {
-      state.distances = payload
+      state.distances = payload;
     },
     SET_NUMBER_DIST_TO_STATE(state, payload) {
       state.number = payload;
     },
-    SET_IS_FILTERING_CITY_TO_STATE(state){
+    SET_IS_FILTERING_CITY_TO_STATE(state) {
       state.isFilteringCity = true;
     },
     SET_IS_SORTING_CITY_TO_STATE(state) {
@@ -56,8 +64,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    FILTER_FROM_API({ commit }, searchData,typeData,compareData,pageNumber, distPerPage){
-      commit("CLEAR_ERROR_FILTER")
+    FILTER_FROM_API(
+      { commit },
+      searchData,
+      typeData,
+      compareData,
+      pageNumber,
+      distPerPage
+    ) {
+      commit("CLEAR_ERROR_FILTER");
+      commit("SET_FILTER_DATA_TO_STORE", searchData, typeData, compareData);
       const url = "http://localhost:3000/filterdist";
       const data = {
         searchData: searchData,
@@ -66,41 +82,49 @@ export default new Vuex.Store({
         pageNumber: pageNumber,
         distPerPage: distPerPage
       };
-      if(searchData.typeData === 'city'&& (searchData.compareData === ">" || searchData.compareData === "<")){
-        commit("SET_ERROR_FILTER", "Для колонки НАЗВАНИЕ  работают только условие СОДЕРЖИТ или РАВНО")
-        return false
+      if (
+        searchData.typeData === "city" &&
+        (searchData.compareData === ">" || searchData.compareData === "<")
+      ) {
+        commit(
+          "SET_ERROR_FILTER",
+          "Для колонки НАЗВАНИЕ  работают только условие СОДЕРЖИТ или РАВНО"
+        );
+        return false;
       }
 
       return axios
-          .post(url, data)
-          .then(response => {
-            commit("SET_DISTANCES_TO_STATE", response.data.distances);
-            commit("CLEAR_IS_SORTING_ALL_TO_STATE");
-            commit("SET_IS_FILTERING_CITY_TO_STATE");
-            commit("SET_NUMBER_DIST_TO_STATE", response.data.count);
-            })
-              .catch(error => {
-                  console.log(error);
-                  return error;
-                });
-
+        .post(url, data)
+        .then(response => {
+           if (Number(response.data.count) === 0){
+            commit("SET_ERROR_FILTER","По вашему запросу ничего не найдено")
+          }
+          commit("SET_DISTANCES_TO_STATE", response.data.distances);
+          commit("CLEAR_IS_SORTING_ALL_TO_STATE");
+          commit("SET_IS_FILTERING_CITY_TO_STATE");
+          commit("SET_NUMBER_DIST_TO_STATE", response.data.count);
+        })
+        .catch(error => {
+          console.log(error);
+          return error;
+        });
     },
-    SORTING_FROM_API({ commit }, { pageNumber, distPerPage, SortingType }) {
+    SORTING_FROM_API({ commit }, { pageNumber, distPerPage, sortingType }) {
       const url = "http://localhost:3000/sortingdist";
       const data = {
         pageNumber: pageNumber,
         distPerPage: distPerPage,
-        SortingType: SortingType
+        sortingType: sortingType
       };
       return axios
         .post(url, data)
         .then(response => {
           commit("SET_DISTANCES_TO_STATE", response.data);
-          if (SortingType === "city") {
+          if (sortingType === "city") {
             commit("SET_IS_SORTING_CITY_TO_STATE");
-          } else if (SortingType === "number") {
+          } else if (sortingType === "number") {
             commit("SET_IS_SORTING_NUMBER_TO_STATE");
-          } else if (SortingType === "distance") {
+          } else if (sortingType === "distance") {
             commit("SET_IS_SORTING_DIST_TO_STATE");
           } else {
             commit("CLEAR_IS_SORTING_ALL_TO_STATE");
@@ -131,8 +155,11 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    PAGE_NUMBER:state => state.pageNumber,
-    ERROR_MESSAGE:state => state.error_message,
+    IS_SEARCH_DATA: state => state.isSearchData,
+    IS_TYPE_DATA: state => state.isTypeData,
+    IS_COMPARE_DATA: state => state.isCompareData,
+    PAGE_NUMBER: state => state.pageNumber,
+    ERROR_MESSAGE: state => state.error_message,
     DISTANCES: state => state.distances,
     NUMBER: state => state.number,
     IS_SORTING_CITY: state => state.isSortingCity,
