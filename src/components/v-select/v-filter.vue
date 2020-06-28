@@ -58,12 +58,14 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "v-filter",
   computed: {
-    ...mapGetters(["GET_ERROR", "ERROR_MESSAGE", "PAGE_NUMBER"]),
+    ...mapGetters(["GET_ERROR", "ERROR_MESSAGE", "PAGE_NUMBER","IS_SORTING_CITY","IS_FILTERING_CITY"]),
     error() {
       return this.GET_ERROR;
     }
   },
   data: () => ({
+    isSortingCity: false,
+    isFilteringCity: false,
     search: "",
     selectItem: "",
     selectCompare: "",
@@ -83,7 +85,10 @@ export default {
     }
   }),
   methods: {
-    ...mapActions(["FILTER_FROM_API"]),
+    ...mapActions([
+            "FILTER_FROM_API",
+      "GET_DATA_CITY_FROM_API"
+    ]),
     onChange(event, index) {
       this.selected[index] = event;
     },
@@ -91,13 +96,30 @@ export default {
       const searchData = this.search,
         typeData = this.filterTypeDistance[this.selected[0]],
         compareData = this.filterCompareDistance[this.selected[1]];
-      this.FILTER_FROM_API({
-        searchData,
-        typeData,
-        compareData,
-        pageNumber: this.PAGE_NUMBER,
-        distPerPage: 10
-      });
+
+      if (typeData === "city"){
+        this.GET_DATA_CITY_FROM_API({
+          isFilteringCity:this.IS_FILTERING_CITY,
+          isSortingCity: this.IS_SORTING_CITY,
+          searchData,
+          typeData,
+          compareData,
+          pageNumber: this.PAGE_NUMBER,
+          distPerPage: 10
+        });
+      } else if(typeData === "number"){
+
+      }else if(typeData === "distance"){
+
+      }
+      //
+      // this.FILTER_FROM_API({
+      //   searchData,
+      //   typeData,
+      //   compareData,
+      //   pageNumber: this.PAGE_NUMBER,
+      //   distPerPage: 10
+      // });
     }
   }
 };

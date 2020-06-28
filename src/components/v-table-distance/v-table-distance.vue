@@ -58,7 +58,7 @@ export default {
     return {
       distPerPage: 10,
       pageNumber: 1,
-      SortingType: ""
+      sortingType: ""
     };
   },
   computed: {
@@ -83,13 +83,13 @@ export default {
     ...mapActions([
       "GET_DISTANCES_FROM_API",
       "SORTING_FROM_API",
-      "FILTER_FROM_API"
+      "GET_DATA_CITY_FROM_API"
     ]),
     sortingByDistance() {
       this.SORTING_FROM_API({
         pageNumber: this.pageNumber,
         distPerPage: 10,
-        SortingType: "distance"
+        sortingType: "distance"
       })
         .then(resp => {
           if (resp.data) {
@@ -104,7 +104,7 @@ export default {
       this.SORTING_FROM_API({
         pageNumber: this.pageNumber,
         distPerPage: 10,
-        SortingType: "number"
+        sortingType: "number"
       })
         .then(resp => {
           if (resp.data) {
@@ -119,7 +119,7 @@ export default {
       this.SORTING_FROM_API({
         pageNumber: this.pageNumber,
         distPerPage: 10,
-        SortingType: "city"
+        sortingType: 'city'
       })
         .then(resp => {
           if (resp.data) {
@@ -133,7 +133,9 @@ export default {
     pageClick(page) {
       this.pageNumber = page;
       if (this.IS_FILTERING_CITY === true) {
-        this.FILTER_FROM_API({
+        this.GET_DATA_CITY_FROM_API({
+          isFilteringCity:this.IS_FILTERING_CITY,
+          isSortingCity: this.IS_SORTING_CITY,
           searchData: this.IS_SEARCH_DATA,
           typeData: this.IS_TYPE_DATA,
           compareData: this.IS_COMPARE_DATA,
@@ -166,7 +168,7 @@ export default {
         this.SORTING_FROM_API({
           pageNumber: this.pageNumber,
           distPerPage: 10,
-          SortingType: "number"
+          sortingType: "number"
         })
           .then(resp => {
             if (resp.data) {
@@ -180,7 +182,7 @@ export default {
         this.SORTING_FROM_API({
           pageNumber: this.pageNumber,
           distPerPage: 10,
-          SortingType: "distance"
+          sortingType: "distance"
         })
           .then(resp => {
             if (resp.data) {

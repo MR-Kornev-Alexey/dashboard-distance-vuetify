@@ -12,18 +12,23 @@ export default new Vuex.Store({
     distances: [],
     number: 0,
     isSortingCity: false,
+    isEquallyCity:"",
+    isContainsCity:"",
+    isFilteringCity: false,
+
     isSortingNumber: false,
     isSortingDistance: false,
-    isFilteringCity: false,
+
+
     isSearchData: "",
     isTypeData: "",
     isCompareData: ""
   },
   mutations: {
-    SET_FILTER_DATA_TO_STORE(state, searchData, typeData, compareData) {
-      state.isSearchData = searchData.searchData;
-      state.isTypeData = searchData.typeData;
-      state.isCompareData = searchData.compareData;
+    SET_FILTER_DATA_TO_STORE(state, allData) {
+      state.isSearchData = allData.searchData;
+      state.isTypeData = allData.typeData;
+      state.isCompareData = allData.compareData;
     },
     CLEAR_ERROR_FILTER(state) {
       state.error_message = "";
@@ -64,79 +69,32 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    FILTER_FROM_API(
-      { commit },
-      searchData,
-      typeData,
-      compareData,
-      pageNumber,
-      distPerPage
-    ) {
+    GET_DATA_CITY_FROM_API( { commit },allData){
       commit("CLEAR_ERROR_FILTER");
-      commit("SET_FILTER_DATA_TO_STORE", searchData, typeData, compareData);
-      const url = "http://localhost:3000/filterdist";
-      const data = {
-        searchData: searchData,
-        typeData: typeData,
-        compareData: compareData,
-        pageNumber: pageNumber,
-        distPerPage: distPerPage
-      };
-      if (
-        searchData.typeData === "city" &&
-        (searchData.compareData === ">" || searchData.compareData === "<")
-      ) {
+      if (allData.compareData === ">" || allData.compareData === "<") {
         commit(
-          "SET_ERROR_FILTER",
-          "Для колонки НАЗВАНИЕ  работают только условие СОДЕРЖИТ или РАВНО"
+            "SET_ERROR_FILTER",
+            "Для колонки НАЗВАНИЕ  работают только условие СОДЕРЖИТ или РАВНО"
         );
         return false;
       }
-
-      return axios
-        .post(url, data)
-        .then(response => {
-           if (Number(response.data.count) === 0){
-            commit("SET_ERROR_FILTER","По вашему запросу ничего не найдено")
-          }
-          commit("SET_DISTANCES_TO_STATE", response.data.distances);
-          commit("CLEAR_IS_SORTING_ALL_TO_STATE");
-          commit("SET_IS_FILTERING_CITY_TO_STATE");
-          commit("SET_NUMBER_DIST_TO_STATE", response.data.count);
-        })
-        .catch(error => {
-          console.log(error);
-          return error;
-        });
+      commit("SET_FILTER_DATA_TO_STORE", allData);
+      const url = "http://localhost:3000/sortingcity";
+      return axios.post(url, allData)
+          .then(response => {
+            if (Number(response.data.count) === 0){
+              commit("SET_ERROR_FILTER","По вашему запросу ничего не найдено")
+            }
+            commit("SET_DISTANCES_TO_STATE", response.data.distances);
+            // commit("CLEAR_IS_SORTING_ALL_TO_STATE");
+            commit("SET_IS_FILTERING_CITY_TO_STATE");
+            commit("SET_NUMBER_DIST_TO_STATE", response.data.count);
+          })
+          .catch(error => {
+            console.log(error);
+            return error;
+          })
     },
-    SORTING_FROM_API({ commit }, { pageNumber, distPerPage, sortingType }) {
-      const url = "http://localhost:3000/sortingdist";
-      const data = {
-        pageNumber: pageNumber,
-        distPerPage: distPerPage,
-        sortingType: sortingType
-      };
-      return axios
-        .post(url, data)
-        .then(response => {
-          commit("SET_DISTANCES_TO_STATE", response.data);
-          if (sortingType === "city") {
-            commit("SET_IS_SORTING_CITY_TO_STATE");
-          } else if (sortingType === "number") {
-            commit("SET_IS_SORTING_NUMBER_TO_STATE");
-          } else if (sortingType === "distance") {
-            commit("SET_IS_SORTING_DIST_TO_STATE");
-          } else {
-            commit("CLEAR_IS_SORTING_ALL_TO_STATE");
-          }
-          return response;
-        })
-        .catch(error => {
-          console.log(error);
-          return error;
-        });
-    },
-
     GET_DISTANCES_FROM_API({ commit }, { pageNumber, distPerPage }) {
       const url = "http://localhost:3000/getfaker";
       const data = { pageNumber: pageNumber, distPerPage: distPerPage };
