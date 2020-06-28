@@ -73,6 +73,27 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        GET_DATA_NUMBER_FROM_API({commit}, allData) {
+            commit("CLEAR_ALL_FLAGS")
+            if (allData.isSortingCity) {
+                commit("SET_IS_SORTING_CITY_TO_STATE");
+            }
+            if (allData.isSortingNumber) {
+                commit("SET_IS_SORTING_NUMBER_TO_STATE");
+            }
+            if (allData.isSortingDistance) {
+                commit("SET_IS_SORTING_DIST_TO_STATE");
+            }
+            commit("CLEAR_ERROR_FILTER")
+            if (allData.compareData === "contains") {
+                commit(
+                    "SET_ERROR_FILTER",
+                    "Для колонки КОЛИЧЕСТВО условие СОДЕРЖИТ не работает"
+                );
+                return false;
+            }
+
+        },
         GET_DATA_CITY_FROM_API({commit}, allData) {
             commit("CLEAR_ALL_FLAGS")
             if (allData.isSortingCity) {
@@ -84,9 +105,6 @@ export default new Vuex.Store({
             if (allData.isSortingDistance) {
                 commit("SET_IS_SORTING_DIST_TO_STATE");
             }
-            // if (allData.isFilteringCity) {
-            //     commit("SET_IS_FILTERING_CITY_TO_STATE")
-            // }
             commit("CLEAR_ERROR_FILTER");
             if (allData.compareData === ">" || allData.compareData === "<") {
                 commit(

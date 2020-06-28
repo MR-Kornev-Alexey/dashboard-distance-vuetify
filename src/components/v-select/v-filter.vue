@@ -58,7 +58,13 @@ import { mapActions, mapGetters } from "vuex";
 export default {
   name: "v-filter",
   computed: {
-    ...mapGetters(["GET_ERROR", "ERROR_MESSAGE", "PAGE_NUMBER","IS_SORTING_CITY","IS_FILTERING_CITY"]),
+    ...mapGetters([
+            "GET_ERROR",
+            "ERROR_MESSAGE",
+            "PAGE_NUMBER",
+            "IS_SORTING_CITY",
+            "IS_FILTERING_CITY",
+            "IS_SORTING_NUMBER"]),
     error() {
       return this.GET_ERROR;
     }
@@ -87,7 +93,8 @@ export default {
   methods: {
     ...mapActions([
             "FILTER_FROM_API",
-      "GET_DATA_CITY_FROM_API"
+            "GET_DATA_CITY_FROM_API",
+            "GET_DATA_NUMBER_FROM_API"
     ]),
     onChange(event, index) {
       this.selected[index] = event;
@@ -108,18 +115,19 @@ export default {
           distPerPage: 10
         });
       } else if(typeData === "number"){
+        this.GET_DATA_NUMBER_FROM_API({
+          isFilteringNumber: true,
+          isSortingNumber: this.IS_SORTING_NUMBER,
+          searchData,
+          typeData,
+          compareData,
+          pageNumber: this.PAGE_NUMBER,
+          distPerPage: 10
+        });
 
       }else if(typeData === "distance"){
 
       }
-      //
-      // this.FILTER_FROM_API({
-      //   searchData,
-      //   typeData,
-      //   compareData,
-      //   pageNumber: this.PAGE_NUMBER,
-      //   distPerPage: 10
-      // });
     }
   }
 };
