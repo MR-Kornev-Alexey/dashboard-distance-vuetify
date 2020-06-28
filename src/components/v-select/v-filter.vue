@@ -99,7 +99,7 @@ export default {
 
       if (typeData === "city"){
         this.GET_DATA_CITY_FROM_API({
-          isFilteringCity:this.IS_FILTERING_CITY,
+          isFilteringCity: true,
           isSortingCity: this.IS_SORTING_CITY,
           searchData,
           typeData,
