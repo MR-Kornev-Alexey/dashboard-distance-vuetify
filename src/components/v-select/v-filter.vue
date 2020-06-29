@@ -59,12 +59,12 @@ export default {
   name: "v-filter",
   computed: {
     ...mapGetters([
-            "GET_ERROR",
-            "ERROR_MESSAGE",
-            "PAGE_NUMBER",
-            "IS_SORTING_CITY",
-            "IS_SORTING_NUMBER",
-            "IS_SORTING_DISTANCE"
+      "GET_ERROR",
+      "ERROR_MESSAGE",
+      "PAGE_NUMBER",
+      "IS_SORTING_CITY",
+      "IS_SORTING_NUMBER",
+      "IS_SORTING_DISTANCE"
     ]),
     error() {
       return this.GET_ERROR;
@@ -93,10 +93,10 @@ export default {
   }),
   methods: {
     ...mapActions([
-            "FILTER_FROM_API",
-            "GET_DATA_CITY_FROM_API",
-            "GET_DATA_NUMBER_FROM_API",
-            "GET_DATA_DISTANCE_FROM_API"
+      "FILTER_FROM_API",
+      "GET_DATA_CITY_FROM_API",
+      "GET_DATA_NUMBER_FROM_API",
+      "GET_DATA_DISTANCE_FROM_API"
     ]),
     onChange(event, index) {
       this.selected[index] = event;
@@ -106,7 +106,7 @@ export default {
         typeData = this.filterTypeDistance[this.selected[0]],
         compareData = this.filterCompareDistance[this.selected[1]];
 
-      if (typeData === "city"){
+      if (typeData === "city") {
         this.GET_DATA_CITY_FROM_API({
           isFilteringCity: true,
           isSortingCity: this.IS_SORTING_CITY,
@@ -116,7 +116,7 @@ export default {
           pageNumber: this.PAGE_NUMBER,
           distPerPage: 10
         });
-      } else if(typeData === "number"){
+      } else if (typeData === "number") {
         this.GET_DATA_NUMBER_FROM_API({
           isFilteringNumber: true,
           isSortingNumber: this.IS_SORTING_NUMBER,
@@ -126,8 +126,7 @@ export default {
           pageNumber: this.PAGE_NUMBER,
           distPerPage: 10
         });
-
-      }else if(typeData === "distance"){
+      } else if (typeData === "distance") {
         this.GET_DATA_DISTANCE_FROM_API({
           isFilteringDistance: true,
           isSortingDistance: this.IS_SORTING_DISTANCE,
@@ -137,7 +136,6 @@ export default {
           pageNumber: this.PAGE_NUMBER,
           distPerPage: 10
         });
-
       }
     }
   }
