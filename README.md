@@ -24,6 +24,9 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ###Author
+```
 Alexey Kornev alex@mrk.digital
+```
 ###Demo
+```
 http://dist.mrk.digital/ 
