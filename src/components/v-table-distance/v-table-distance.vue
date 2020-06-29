@@ -70,6 +70,7 @@
                 "IS_SORTING_DISTANCE",
                 "IS_FILTERING_CITY",
                 "IS_FILTERING_NUMBER",
+                "IS_FILTERING_DISTANCE",
                 "PAGE_NUMBER",
                 "IS_SEARCH_DATA",
                 "IS_TYPE_DATA",
@@ -84,7 +85,9 @@
             ...mapActions([
                 "GET_DISTANCES_FROM_API",
                 "SORTING_FROM_API",
-                "GET_DATA_CITY_FROM_API"
+                "GET_DATA_CITY_FROM_API",
+                "GET_DATA_NUMBER_FROM_API",
+                "GET_DATA_DISTANCE_FROM_API"
             ]),
             sortingByDistance() {
                 if (this.IS_FILTERING_CITY === true) {
@@ -108,7 +111,52 @@
                             return error;
                         });
 
+                } else if (this.IS_FILTERING_NUMBER) {
+                    alert("2 позиция для расстояния")
+                    this.GET_DATA_NUMBER_FROM_API({
+                        isFilteringNumber: this.IS_FILTERING_NUMBER,
+                        isSortingCity: false,
+                        isSortingNumber: false,
+                        isSortingDistance: true,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
+                }else if (this.IS_FILTERING_DISTANCE) {
+                    alert("2 позиция для IS_FILTERING_DISTANCE")
+                    this.GET_DATA_DISTANCE_FROM_API({
+                        isFilteringDistance: this.IS_FILTERING_DISTANCE,
+                        isSortingCity: false,
+                        isSortingNumber: false,
+                        isSortingDistance: true,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
                 }
+
             },
             sortingByNumber() {
                 if (this.IS_FILTERING_CITY === true) {
@@ -132,12 +180,103 @@
                             return error;
                         });
 
+                } else if (this.IS_FILTERING_NUMBER) {
+                    alert("2 позиция для количества")
+                    this.GET_DATA_NUMBER_FROM_API({
+                        isFilteringNumber: this.IS_FILTERING_NUMBER,
+                        isSortingCity: false,
+                        isSortingNumber: true,
+                        isSortingDistance: false,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
                 }
+                else if (this.IS_FILTERING_DISTANCE) {
+                    alert("2 позиция для IS_FILTERING_DISTANCE")
+                    this.GET_DATA_DISTANCE_FROM_API({
+                        isFilteringDistance: this.IS_FILTERING_DISTANCE,
+                        isSortingCity: false,
+                        isSortingNumber: true,
+                        isSortingDistance: false,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
+                }
+
             },
             sortingByCity() {
-                if (this.IS_FILTERING_CITY === true) {
+                if (this.IS_FILTERING_CITY) {
+                    alert("1 позиция")
                     this.GET_DATA_CITY_FROM_API({
                         isFilteringCity: this.IS_FILTERING_CITY,
+                        isSortingCity: true,
+                        isSortingNumber: false,
+                        isSortingDistance: false,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
+                } else if (this.IS_FILTERING_NUMBER) {
+                    alert("2 позиция")
+                    this.GET_DATA_NUMBER_FROM_API({
+                        isFilteringNumber: this.IS_FILTERING_NUMBER,
+                        isSortingCity: true,
+                        isSortingNumber: false,
+                        isSortingDistance: false,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
+                } else if (this.IS_FILTERING_DISTANCE) {
+                    alert("1 позиция IS_FILTERING_DISTANCE")
+                    this.GET_DATA_DISTANCE_FROM_API({
+                        isFilteringDistance: this.IS_FILTERING_DISTANCE,
                         isSortingCity: true,
                         isSortingNumber: false,
                         isSortingDistance: false,
@@ -180,8 +319,8 @@
             pageClick(page) {
                 this.pageNumber = page;
                 if (this.IS_FILTERING_CITY) {
-                    if(this.IS_SORTING_CITY&&!this.IS_SORTING_NUMBER&&!this.IS_SORTING_DISTANCE ){
-                            this.GET_DATA_CITY_FROM_API({
+                    if (this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_CITY_FROM_API({
                             isFilteringCity: this.IS_FILTERING_CITY,
                             isSortingCity: true,
                             isSortingNumber: false,
@@ -200,7 +339,7 @@
                             .catch(error => {
                                 return error;
                             });
-                      }else if(!this.IS_SORTING_CITY&&this.IS_SORTING_NUMBER&&!this.IS_SORTING_DISTANCE ){
+                    } else if (!this.IS_SORTING_CITY && this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
                         this.GET_DATA_CITY_FROM_API({
                             isFilteringCity: this.IS_FILTERING_CITY,
                             isSortingCity: false,
@@ -222,8 +361,7 @@
                             });
 
 
-
-                      }else if(!this.IS_SORTING_CITY&&!this.IS_SORTING_NUMBER&&this.IS_SORTING_DISTANCE ){
+                    } else if (!this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && this.IS_SORTING_DISTANCE) {
                         this.GET_DATA_CITY_FROM_API({
                             isFilteringCity: this.IS_FILTERING_CITY,
                             isSortingCity: false,
@@ -245,53 +383,209 @@
                             });
 
 
+                    }else if (!this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_CITY_FROM_API({
+                            isFilteringCity: this.IS_FILTERING_CITY,
+                            isSortingCity: false,
+                            isSortingNumber: false,
+                            isSortingDistance: false,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
 
 
                     }
-                        } else if (this.IS_FILTERING_CITY){
-                    this.GET_DATA_CITY_FROM_API({
-                        isFilteringCity: this.IS_FILTERING_CITY,
-                        isSortingCity: this.IS_SORTING_CITY,
-                        searchData: this.IS_SEARCH_DATA,
-                        typeData: 'city',
-                        compareData: this.IS_COMPARE_DATA,
-                        pageNumber: this.pageNumber,
-                        distPerPage: 10
-                    })
-                        .then(resp => {
-                            if (resp.data) {
-                                // console.log('data arrived')
-                            }
+
+                } else if (this.IS_FILTERING_NUMBER) {
+                    if (this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_NUMBER_FROM_API({
+                            isFilteringNumber: this.IS_FILTERING_NUMBER,
+                            isSortingCity: true,
+                            isSortingNumber: false,
+                            isSortingDistance: false,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
                         })
-                        .catch(error => {
-                            return error;
-                        });
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+                    } else if (!this.IS_SORTING_CITY && this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_NUMBER_FROM_API({
+                            isFilteringNumber: this.IS_FILTERING_NUMBER,
+                            isSortingCity: false,
+                            isSortingNumber: true,
+                            isSortingDistance: false,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+
+
+                    } else if (!this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_NUMBER_FROM_API({
+                            isFilteringNumber: this.IS_FILTERING_NUMBER,
+                            isSortingCity: false,
+                            isSortingNumber: false,
+                            isSortingDistance: true,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+
+
+                    }else if (!this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_NUMBER_FROM_API({
+                            isFilteringNumber: this.IS_FILTERING_NUMBER,
+                            isSortingCity: false,
+                            isSortingNumber: false,
+                            isSortingDistance: false,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+
+
+                    }
+
                 }
-
-
-
-
-
-
-
-                else if (!this.IS_FILTERING_CITY){
-                    this.GET_DATA_CITY_FROM_API({
-                        isFilteringCity: this.IS_FILTERING_CITY,
-                        isSortingCity: this.IS_SORTING_CITY,
-                        searchData: this.IS_SEARCH_DATA,
-                        typeData: 'city',
-                        compareData: this.IS_COMPARE_DATA,
-                        pageNumber: this.pageNumber,
-                        distPerPage: 10
-                    })
-                        .then(resp => {
-                            if (resp.data) {
-                                // console.log('data arrived')
-                            }
+                else if (this.IS_FILTERING_DISTANCE) {
+                    if (this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_DISTANCE_FROM_API({
+                            isFilteringDistance: this.IS_FILTERING_DISTANCE,
+                            isSortingCity: true,
+                            isSortingNumber: false,
+                            isSortingDistance: false,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
                         })
-                        .catch(error => {
-                            return error;
-                        });
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+                    } else if (!this.IS_SORTING_CITY && this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_DISTANCE_FROM_API({
+                            isFilteringDistance: this.IS_FILTERING_DISTANCE,
+                            isSortingCity: false,
+                            isSortingNumber: true,
+                            isSortingDistance: false,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+
+
+                    } else if (!this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_DISTANCE_FROM_API({
+                            isFilteringDistance: this.IS_FILTERING_DISTANCE,
+                            isSortingCity: false,
+                            isSortingNumber: false,
+                            isSortingDistance: true,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+
+
+                    }else if (!this.IS_SORTING_CITY && !this.IS_SORTING_NUMBER && !this.IS_SORTING_DISTANCE) {
+                        this.GET_DATA_DISTANCE_FROM_API({
+                            isFilteringDistance: this.IS_FILTERING_DISTANCE,
+                            isSortingCity: false,
+                            isSortingNumber: false,
+                            isSortingDistance: false,
+                            searchData: this.IS_SEARCH_DATA,
+                            typeData: this.IS_TYPE_DATA,
+                            compareData: this.IS_COMPARE_DATA,
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                            .then(resp => {
+                                if (resp.data) {
+                                    // console.log('data arrived')
+                                }
+                            })
+                            .catch(error => {
+                                return error;
+                            });
+
+
+                    }
+
                 }
             }
 

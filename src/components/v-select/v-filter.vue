@@ -63,8 +63,9 @@ export default {
             "ERROR_MESSAGE",
             "PAGE_NUMBER",
             "IS_SORTING_CITY",
-            "IS_FILTERING_CITY",
-            "IS_SORTING_NUMBER"]),
+            "IS_SORTING_NUMBER",
+            "IS_SORTING_DISTANCE"
+    ]),
     error() {
       return this.GET_ERROR;
     }
@@ -94,7 +95,8 @@ export default {
     ...mapActions([
             "FILTER_FROM_API",
             "GET_DATA_CITY_FROM_API",
-            "GET_DATA_NUMBER_FROM_API"
+            "GET_DATA_NUMBER_FROM_API",
+            "GET_DATA_DISTANCE_FROM_API"
     ]),
     onChange(event, index) {
       this.selected[index] = event;
@@ -126,6 +128,15 @@ export default {
         });
 
       }else if(typeData === "distance"){
+        this.GET_DATA_DISTANCE_FROM_API({
+          isFilteringDistance: true,
+          isSortingDistance: this.IS_SORTING_DISTANCE,
+          searchData,
+          typeData,
+          compareData,
+          pageNumber: this.PAGE_NUMBER,
+          distPerPage: 10
+        });
 
       }
     }
