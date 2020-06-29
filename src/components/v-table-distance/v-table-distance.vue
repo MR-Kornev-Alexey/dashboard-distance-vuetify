@@ -3,15 +3,20 @@
         <v-flex class="d-flex justify-space-between"></v-flex>
         <div class="v-table__header mt-4">
             <p class="dist_time">Дата</p>
-            <p class="d-flex justify-start text-center dist_city">
+            <p :class="{ icon__selected: IS_SORTING_CITY }"
+               class="d-flex justify-start text-center dist_city">
                 Название
-                <v-icon @click="sortingByCity"> mdi-unfold-more-horizontal</v-icon>
+                <v-icon
+
+                        @click="sortingByCity"> mdi-unfold-more-horizontal</v-icon>
             </p>
-            <p class="d-flex justify-start  text-center dist_city">
+            <p :class="{ icon__selected: IS_SORTING_NUMBER }"
+               class="d-flex justify-start  text-center dist_city">
                 Количество
                 <v-icon @click="sortingByNumber"> mdi-unfold-more-horizontal</v-icon>
             </p>
-            <p class="d-flex justify-start  text-center dist_city">
+            <p :class="{ icon__selected: IS_SORTING_DISTANCE }"
+               class="d-flex justify-start  text-center dist_city">
                 Расстояние
                 <v-icon @click="sortingByDistance"> mdi-unfold-more-horizontal</v-icon>
             </p>
@@ -112,8 +117,7 @@
                         });
 
                 } else if (this.IS_FILTERING_NUMBER) {
-                    alert("2 позиция для расстояния")
-                    this.GET_DATA_NUMBER_FROM_API({
+                      this.GET_DATA_NUMBER_FROM_API({
                         isFilteringNumber: this.IS_FILTERING_NUMBER,
                         isSortingCity: false,
                         isSortingNumber: false,
@@ -134,8 +138,7 @@
                         });
 
                 }else if (this.IS_FILTERING_DISTANCE) {
-                    alert("2 позиция для IS_FILTERING_DISTANCE")
-                    this.GET_DATA_DISTANCE_FROM_API({
+                     this.GET_DATA_DISTANCE_FROM_API({
                         isFilteringDistance: this.IS_FILTERING_DISTANCE,
                         isSortingCity: false,
                         isSortingNumber: false,
@@ -181,8 +184,7 @@
                         });
 
                 } else if (this.IS_FILTERING_NUMBER) {
-                    alert("2 позиция для количества")
-                    this.GET_DATA_NUMBER_FROM_API({
+                   this.GET_DATA_NUMBER_FROM_API({
                         isFilteringNumber: this.IS_FILTERING_NUMBER,
                         isSortingCity: false,
                         isSortingNumber: true,
@@ -204,8 +206,7 @@
 
                 }
                 else if (this.IS_FILTERING_DISTANCE) {
-                    alert("2 позиция для IS_FILTERING_DISTANCE")
-                    this.GET_DATA_DISTANCE_FROM_API({
+                   this.GET_DATA_DISTANCE_FROM_API({
                         isFilteringDistance: this.IS_FILTERING_DISTANCE,
                         isSortingCity: false,
                         isSortingNumber: true,
@@ -230,8 +231,7 @@
             },
             sortingByCity() {
                 if (this.IS_FILTERING_CITY) {
-                    alert("1 позиция")
-                    this.GET_DATA_CITY_FROM_API({
+                   this.GET_DATA_CITY_FROM_API({
                         isFilteringCity: this.IS_FILTERING_CITY,
                         isSortingCity: true,
                         isSortingNumber: false,
@@ -252,8 +252,7 @@
                         });
 
                 } else if (this.IS_FILTERING_NUMBER) {
-                    alert("2 позиция")
-                    this.GET_DATA_NUMBER_FROM_API({
+                   this.GET_DATA_NUMBER_FROM_API({
                         isFilteringNumber: this.IS_FILTERING_NUMBER,
                         isSortingCity: true,
                         isSortingNumber: false,
@@ -274,7 +273,6 @@
                         });
 
                 } else if (this.IS_FILTERING_DISTANCE) {
-                    alert("1 позиция IS_FILTERING_DISTANCE")
                     this.GET_DATA_DISTANCE_FROM_API({
                         isFilteringDistance: this.IS_FILTERING_DISTANCE,
                         isSortingCity: true,
@@ -586,6 +584,83 @@
 
                     }
 
+                } else if (this.IS_SORTING_CITY) {
+                    this.GET_DATA_CITY_FROM_API({
+                        isFilteringCity: false,
+                        isSortingCity: true,
+                        isSortingNumber: false,
+                        isSortingDistance: false,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
+                }else if (this.IS_SORTING_NUMBER) {
+                    this.GET_DATA_NUMBER_FROM_API({
+                        isFilteringNumber: false,
+                        isSortingCity: false,
+                        isSortingNumber: true,
+                        isSortingDistance: false,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
+                } else if (this.IS_SORTING_DISTANCE) {
+                    this.GET_DATA_DISTANCE_FROM_API({
+                        isFilteringDistance: false,
+                        isSortingCity: false,
+                        isSortingNumber: false,
+                        isSortingDistance: false,
+                        searchData: this.IS_SEARCH_DATA,
+                        typeData: this.IS_TYPE_DATA,
+                        compareData: this.IS_COMPARE_DATA,
+                        pageNumber: this.pageNumber,
+                        distPerPage: 10
+                    })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
+                } else  {
+                       this.GET_DISTANCES_FROM_API({
+                            pageNumber: this.pageNumber,
+                            distPerPage: 10
+                        })
+                        .then(resp => {
+                            if (resp.data) {
+                                // console.log('data arrived')
+                            }
+                        })
+                        .catch(error => {
+                            return error;
+                        });
+
                 }
             }
 
@@ -608,6 +683,11 @@
 </script>
 
 <style lang="scss">
+    .icon__selected{
+        color: darkred;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
     .search {
         padding: 0;
         margin: 0;
