@@ -13,19 +13,14 @@ export default new Vuex.Store({
         error_message: "",
         distances: [],
         number: 0,
-
         isEquallyCity: "",
         isContainsCity: "",
-
         isFilteringCity: false,
         isFilteringNumber:false,
         isFilteringDistance:false,
-
         isSortingCity: false,
         isSortingNumber: false,
         isSortingDistance: false,
-
-
         isSearchData: "",
         isTypeData: "",
         isCompareData: ""
