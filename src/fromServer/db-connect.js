@@ -284,7 +284,6 @@ async function getAllDist(limit, offset) {
     return [];
   }
 }
-
 module.exports.getSortingDistance = getSortingDistance;
 module.exports.getSortingNumber = getSortingNumber;
 module.exports.getSortingCity = getSortingCity;
